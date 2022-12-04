@@ -1,10 +1,15 @@
-import { Router } from "express";
+import {
+  Router
+} from "express";
 
-import { login, redirect } from "../controllers/discord-auth";
+import {
+  login,
+  callback,
+} from "../controllers/discord-auth";
 
 const router = Router();
 
 router.get("/login", login);
-router.get("/redirect", redirect);
+router.get("/callback", callback);
 
 export default router;

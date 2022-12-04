@@ -6,8 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/src/server.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/src/server.js\""
+    "start": "export NODE_ENV=production&& node dist/src/server.js",
+    "dev": "concurrently \"npx tsc --watch\" \"export NODE_ENV=development&& nodemon -q dist/src/server.js\""
   },
   "author": "",
   "license": "ISC",
@@ -18,8 +18,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "got": "^12.5.3",
-    "passport": "^0.6.0",
-    "passport-discord": "^0.1.4",
+    "request": "^2.88.2",
     "typescript": "^4.9.3"
   },
   "devDependencies": {

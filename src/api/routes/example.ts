@@ -1,6 +1,14 @@
-import { Router } from "express";
+import {
+  Router
+} from "express";
 
-import { index, show, store, destroy, update } from "../controllers/example";
+import {
+  index,
+  show,
+  store,
+  destroy,
+  update
+} from "../controllers/example";
 
 const router = Router();
 
