@@ -3,13 +3,15 @@ import {
 } from "express";
 
 import {
-  login,
-  callback,
+  getLoginUrl,
+  getToken,
+  validateToken
 } from "../controllers/discord-auth";
 
 const router = Router();
 
-router.get("/login", login);
-router.get("/callback", callback);
+router.get("/get_login_url", getLoginUrl);
+router.get("/get_token", getToken);
+router.get("/validate_token", validateToken);
 
 export default router;
