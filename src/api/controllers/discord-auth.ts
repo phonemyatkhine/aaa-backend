@@ -25,8 +25,8 @@ export const getToken: RequestHandler = async (req, res) => {
   const {
     code
   } = req.query;
-
   try {
+    console.log("Hello world");
     request.post('https://discord.com/api/oauth2/token', {
       form: {
         client_id: process.env.DISCORD_CLIENT_ID ?? '',
@@ -35,31 +35,35 @@ export const getToken: RequestHandler = async (req, res) => {
         code: code as string,
         redirect_uri: process.env.FRONTEND_APP_URL + "/auth/discord/callback",
       }
-    }, async (err: any, response: any, body: any) => {
-      const {
-        access_token
-      } = JSON.parse(response.body);
-      if(!access_token) {
-        res.status(500).send({
-          message: "Something went wrong"
+    }, (err: any, response: any, body: any) => {
+      if(response) {
+        const {
+          access_token
+        } = JSON.parse(response.body);
+        if(!access_token) {
+          res.status(500).send({
+            message: "Something went wrong"
+          });
+        }
+        request.get("https://discord.com/api/users/@me", {
+          'auth': {
+            'bearer' : access_token
+          }
+        }, (err: any, response: any, body: any) => {
+          if(response) {
+            const {
+              id, username, avatar,
+            } = JSON.parse(response.body);
+            res.header('Content-Type', 'application/json');
+            res.send({
+              discordUserId: id,
+              username: username,
+              avatar : `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`,
+              accessToken: access_token,
+            });
+          }
         });
       }
-      request.get("https://discord.com/api/users/@me", {
-        'auth': {
-          'bearer' : access_token
-        }
-      }, (err: any, response: any, body: any) => {
-        const {
-          id, username, avatar,
-        } = JSON.parse(response.body);
-        res.header('Content-Type', 'application/json');
-        res.send({
-          discordUserId: id,
-          username: username,
-          avatar : `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`,
-          accessToken: access_token,
-        })
-      });
     });
   } catch (error) {
     console.log(error);
@@ -79,6 +83,22 @@ export const validateToken: RequestHandler = async (req, res) => {
 
   return res.status(response.code).send(response);
 }
+
+export const logout: RequestHandler = async (req, res) => {
+  // const { accesstoken, discorduserid } = req.headers;
+  // request.post("https://discord.com/api/oauth2/token/revoke", {
+  //   auth: {
+  //     bearer : accesstoken
+  //   }
+  // }, (err: any, response: any, body: any) => {
+  //   console.log("Logout ",response);
+  //   console.log("Logout Err ",err);
+    res.header('Content-Type', 'application/json');
+    res.send({
+      "message": "Logged out successfully"
+    })
+  // });
+};
 
 /* using passport 
 export const login: RequestHandler = async (req, res) => {

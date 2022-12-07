@@ -3,6 +3,7 @@ import express, {
 } from "express";
 import dotenv from "dotenv";
 import routes from "./api/routes";
+import dbInit from "./db/init";
 import bodyParser from "body-parser";
 
 dotenv.config();
@@ -13,6 +14,7 @@ const app: Express = express();
 // CORS only limits on production/staging server
 const cors = require("cors");
 const isDev = process.env.NODE_ENV === "development";
+dbInit();
 
 if (!isDev) {
   const whitelist = ['https://www.pacapaca.io/'];

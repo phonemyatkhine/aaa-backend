@@ -2,15 +2,16 @@ const request = require('request');
 
 export const validateTokenWithDiscord = async (discordUserId: string, accessToken: string) => {
   let response: any = await doRequest("https://discord.com/api/users/@me", {
-    'auth': {
-      'bearer' : accessToken
+    auth: {
+      bearer : accessToken
     } 
   });
+  console.log(response);
   const data = JSON.parse(response);
   if(data.id == discordUserId) {
-    return { "code": 200, "message": "Valid Token", "data": response };
+    return { code: 200, message: "Valid Token", data: data };
   }
-  return { "code": 403, "message": "Invalid Token" }
+  return { code: 403, message: "Invalid Token" }
 }
 
 function doRequest(url: string, options: any) {

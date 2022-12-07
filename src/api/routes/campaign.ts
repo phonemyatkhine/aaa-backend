@@ -8,14 +8,14 @@ import {
   store,
   destroy,
   update
-} from "../controllers/example";
+} from "../controllers/campaign";
 
 const router = Router();
 
 router.get("/", index);
 router.post("/", store);
-router.get("/:slug", show);
-router.put("/:slug", update);
-router.delete("/:slug", destroy);
+router.get("/:id", show);
+router.put("/:id", update);
+router.delete("/:id", destroy);
 
 export default router;

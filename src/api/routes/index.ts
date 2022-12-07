@@ -2,12 +2,12 @@ import {
   Router
 } from "express";
 import discordAuthRouter from "./discord-auth";
-import exampleRouter from "./example";
+import guildRouter from "./campaign";
 import got from "got";
 
 const router = Router();
 
-router.use("/example", exampleRouter)
+router.use("/guilds", guildRouter)
 router.use("/auth/discord", discordAuthRouter);
 
 // router.get("twitter-test", async (req: Request, res: Response) => {
