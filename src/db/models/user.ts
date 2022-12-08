@@ -52,6 +52,7 @@ User.init(
     discordUserId: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     discordUsername: {
       type: DataTypes.STRING,

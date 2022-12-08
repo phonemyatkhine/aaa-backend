@@ -11,6 +11,7 @@ interface CampaignAttributes {
   name: string;
   tweetId: string;
   discordGuildId: string;
+  pointPerTweet: number;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -18,7 +19,7 @@ interface CampaignAttributes {
 export interface CampaignInput
   extends Optional<
     CampaignAttributes,
-    "id" | "name" | "tweetId" | "discordGuildId"
+    "id" | "name" | "tweetId" | "discordGuildId" | "pointPerTweet"
   > {}
 export interface CampaignOutput extends Required<CampaignAttributes> {}
 
@@ -30,6 +31,7 @@ class Campaign
   public name!: string;
   public tweetId!: string;
   public discordGuildId!: string;
+  public pointPerTweet!: number;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -56,6 +58,10 @@ Campaign.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    pointPerTweet: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   },
   {
     timestamps: true,
