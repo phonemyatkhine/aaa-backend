@@ -4,7 +4,7 @@ import sequelizeConnection from "../config";
 interface UserDiscordGuildAttributes {
   id: number;
   userId: number;
-  discordGuildId: number;
+  discordGuildId: string;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -22,7 +22,7 @@ class UserDiscordGuild
 {
   public id!: number;
   public userId!: number;
-  public discordGuildId!: number;
+  public discordGuildId!: string;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -42,7 +42,7 @@ UserDiscordGuild.init(
       allowNull: false,
     },
     discordGuildId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },

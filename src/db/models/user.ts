@@ -9,9 +9,9 @@ import UserDiscordRole from "./user-discord-role";
 
 interface UserAttributes {
   id: number;
-  discordUserId: number;
+  discordUserId: string;
   discordUsername: string;
-  twitterUserId: number;
+  twitterUserId: string;
   twitterUsername: string;
   pacaPoints: number;
   createdAt?: Date;
@@ -30,9 +30,9 @@ class User
   implements UserAttributes
 {
   public id!: number;
-  public discordUserId!: number;
+  public discordUserId!: string;
   public discordUsername!: string;
-  public twitterUserId!: number;
+  public twitterUserId!: string;
   public twitterUsername!: string;
   public pacaPoints!: number;
 
@@ -50,7 +50,7 @@ User.init(
       primaryKey: true,
     },
     discordUserId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     discordUsername: {
@@ -58,7 +58,7 @@ User.init(
       allowNull: true,
     },
     twitterUserId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       allowNull: true,
     },
     twitterUsername: {

@@ -4,7 +4,7 @@ import sequelizeConnection from "../config";
 interface CampaignRoleRequirementAttributes {
   id: number;
   campaignId: number;
-  discordRoleId: number;
+  discordRoleId: string;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -22,7 +22,7 @@ class CampaignRoleRequirement
 {
   public id!: number;
   public campaignId!: number;
-  public discordRoleId!: number;
+  public discordRoleId!: string;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -42,7 +42,7 @@ CampaignRoleRequirement.init(
       allowNull: false,
     },
     discordRoleId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },

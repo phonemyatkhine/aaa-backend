@@ -9,8 +9,8 @@ import User from "./user";
 interface CampaignAttributes {
   id: number;
   name: string;
-  tweetId: number;
-  discordGuildId: number;
+  tweetId: string;
+  discordGuildId: string;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -28,8 +28,8 @@ class Campaign
 {
   public id!: number;
   public name!: string;
-  public tweetId!: number;
-  public discordGuildId!: number;
+  public tweetId!: string;
+  public discordGuildId!: string;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -53,7 +53,7 @@ Campaign.init(
       allowNull: false,
     },
     discordGuildId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
   },

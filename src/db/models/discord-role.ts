@@ -7,8 +7,8 @@ import User from "./user";
 import UserDiscordRole from "./user-discord-role";
 
 interface DiscordRoleAttributes {
-  id: number;
-  discordGuildId: number;
+  id: string;
+  discordGuildId: string;
   name: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -25,9 +25,8 @@ class DiscordRole
   extends Model<DiscordRoleAttributes, DiscordRoleInput>
   implements DiscordRoleAttributes
 {
-  public id!: number;
-  public discordGuildId!: number;
-  public discordRoleId!: number;
+  public id!: string;
+  public discordGuildId!: string;
   public name!: string;
 
   // timestamps!
@@ -39,12 +38,11 @@ class DiscordRole
 DiscordRole.init(
   {
     id: {
-      type: DataTypes.BIGINT,
-      autoIncrement: true,
+      type: DataTypes.STRING,
       primaryKey: true,
     },
     discordGuildId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     name: {

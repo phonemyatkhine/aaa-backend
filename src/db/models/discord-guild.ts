@@ -6,7 +6,7 @@ import User from "./user";
 import UserDiscordGuild from "./user-discord-guild";
 
 interface DiscordGuildAttributes {
-  id: number;
+  id: string;
   name: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,7 +23,7 @@ class DiscordGuild
   extends Model<DiscordGuildAttributes, DiscordGuildInput>
   implements DiscordGuildAttributes
 {
-  public id!: number;
+  public id!: string;
   public name!: string;
 
   // timestamps!
@@ -35,7 +35,7 @@ class DiscordGuild
 DiscordGuild.init(
   {
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
       primaryKey: true,
     },
     name: {
