@@ -1,11 +1,16 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelizeConnection from "../config";
+import CampaignRoleRequirement from "./campaign-role-requirement";
+import DiscordGuild from "./discord-guild";
+import DiscordRole from "./discord-role";
+import TweetTransaction from "./tweet-transaction";
+import User from "./user";
 
 interface CampaignAttributes {
   id: number;
   name: string;
-  tweetId: string;
-  guildId: string;
+  tweetId: number;
+  discordGuildId: number;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -13,7 +18,7 @@ interface CampaignAttributes {
 export interface CampaignInput
   extends Optional<
     CampaignAttributes,
-    "id" | "name" | "tweetId" | "guildId"
+    "id" | "name" | "tweetId" | "discordGuildId"
   > {}
 export interface CampaignOutput extends Required<CampaignAttributes> {}
 
@@ -23,8 +28,8 @@ class Campaign
 {
   public id!: number;
   public name!: string;
-  public tweetId!: string;
-  public guildId!: string;
+  public tweetId!: number;
+  public discordGuildId!: number;
 
   // timestamps!
   public readonly createdAt!: Date;
@@ -47,8 +52,8 @@ Campaign.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    guildId: {
-      type: DataTypes.STRING,
+    discordGuildId: {
+      type: DataTypes.BIGINT,
       allowNull: false,
     },
   },
@@ -57,5 +62,11 @@ Campaign.init(
     sequelize: sequelizeConnection,
   }
 );
+
+Campaign.belongsToMany(DiscordRole, { through: "Campaign_Role_Requirement" })
+Campaign.hasMany(TweetTransaction, { foreignKey: "campaignId" });
+Campaign.hasMany(CampaignRoleRequirement, { foreignKey: "campaignId" });
+// Campaign.belongsTo(DiscordGuild, { foreignKey: "discordGuildId" })
+// Campaign.belongsToMany(User, { through: "Tweet_Transaction" })
 
 export default Campaign;
