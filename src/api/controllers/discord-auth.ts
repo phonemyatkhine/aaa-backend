@@ -1,7 +1,7 @@
 import {
   RequestHandler
 } from 'express';
-import { findOrCreate } from "../../db/dal/user"
+import { populateDiscordData } from "../../services/discord";
 const request = require('request');
 
 export const getLoginUrl: RequestHandler = async (req, res) => {
@@ -61,10 +61,7 @@ export const getToken: RequestHandler = async (req, res) => {
               avatar : `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`,
               accessToken: access_token,
             });
-            findOrCreate({
-              discordUserId: id,
-              discordUsername: username,
-            });
+            populateDiscordData(id, username, access_token);
           }
         });
       }
@@ -79,6 +76,9 @@ export const getToken: RequestHandler = async (req, res) => {
 }
 
 export const validateToken: RequestHandler = async (req, res) => {
+  const {accesstoken : accessToken, discorduserid: discordUserId} = req.headers;
+  populateDiscordData(discordUserId as string, "", accessToken as string);
+  
   res.header('Content-Type', 'application/json');
   res.status(200).send({
     "message": "Valid Token"

@@ -3,11 +3,11 @@ import {
 } from "express";
 
 import {
-  index,
-} from "../controllers/campaign";
+  getAuthUser
+} from "../controllers/user";
 
 const router = Router();
 
-router.get("/", index);
+router.get("/@me", getAuthUser);
 
 export default router;

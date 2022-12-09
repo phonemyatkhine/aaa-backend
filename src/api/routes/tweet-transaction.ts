@@ -3,11 +3,11 @@ import {
 } from "express";
 
 import {
-  index,
-} from "../controllers/campaign";
+  store
+} from "../controllers/tweet-transaction";
 
 const router = Router();
 
-router.get("/", index);
+router.post("/", store);
 
 export default router;

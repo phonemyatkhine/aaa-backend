@@ -2,7 +2,6 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelizeConnection from "../config";
 import Campaign from "./campaign";
 import DiscordRole from "./discord-role";
-import User from "./user";
 import UserDiscordGuild from "./user-discord-guild";
 
 interface DiscordGuildAttributes {

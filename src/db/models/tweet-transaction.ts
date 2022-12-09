@@ -60,6 +60,10 @@ TweetTransaction.init(
     }
   },
   {
+    indexes: [{
+      unique: true,
+      fields: ["userId", "campaignId"],
+    }],
     timestamps: true,
     sequelize: sequelizeConnection,
   }

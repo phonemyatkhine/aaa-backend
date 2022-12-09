@@ -1,5 +1,4 @@
-const request = require('request');
-
+import { doRequest } from "./common";
 export const validateTokenWithDiscord = async (discordUserId: string, accessToken: string) => {
   let response: any = await doRequest("https://discord.com/api/users/@me", {
     auth: {
@@ -40,16 +39,4 @@ export const authMiddleware = async (req: any, res: any, next: any) => {
       "message": "Something went wrong"
     })
   }
-}
-
-function doRequest(url: string, options: any) {
-  return new Promise(function (resolve, reject) {
-    request(url, options, function (error: any, res: any, body: any) {
-      if (!error && res.statusCode === 200) {
-        resolve(body);
-      } else {
-        reject(error);
-      }
-    });
-  });
 }

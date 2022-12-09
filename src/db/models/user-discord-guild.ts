@@ -47,6 +47,10 @@ UserDiscordGuild.init(
     },
   },
   {
+    indexes: [{
+      unique: true,
+      fields: ["discordGuildId", "userId"],
+    }],
     timestamps: true,
     sequelize: sequelizeConnection,
   }

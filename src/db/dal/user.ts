@@ -1,3 +1,4 @@
+import e from "express";
 import User from "../models/user";
 import { UserInput, UserOutput } from "../models/user";
 
@@ -40,6 +41,20 @@ export const updateById = async (
 
 export const getById = async (id: number): Promise<UserOutput> => {
   const user = await User.findByPk(id);
+  if (!user) {
+    var err = new Error("User not found");
+    err.code = 404;
+    throw err;
+  }
+  return user;
+};
+
+export const getByDiscordUserId = async (discordUserId: string): Promise<UserOutput> => {
+  const user = await User.findOne({
+    where: {
+      discordUserId,
+    }
+  });
   if (!user) {
     var err = new Error("User not found");
     err.code = 404;

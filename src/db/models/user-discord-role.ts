@@ -47,6 +47,10 @@ UserDiscordRole.init(
     },
   },
   {
+    indexes: [{
+      unique: true,
+      fields: ["discordRoleId", "userId"],
+    }],
     timestamps: true,
     sequelize: sequelizeConnection,
   }

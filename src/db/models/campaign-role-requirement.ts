@@ -47,6 +47,10 @@ CampaignRoleRequirement.init(
     },
   },
   {
+    indexes: [{
+      unique: true,
+      fields: ["discordRoleId", "campaignId"],
+    }],
     timestamps: true,
     sequelize: sequelizeConnection,
   }
