@@ -11,14 +11,14 @@ const isDev = process.env.NODE_ENV === "development";
 
 const dbInit = () => {
   // if isDev run migrations, seedings, etc.
-  User.sync({ alter: isDev });
-  DiscordGuild.sync({ alter: isDev });
-  Campaign.sync({ alter: isDev });
-  DiscordRole.sync({ alter: isDev });
-  TweetTransaction.sync({ alter: isDev });
-  UserDiscordGuild.sync({ alter: isDev });
-  UserDiscordRole.sync({ alter: isDev });
-  CampaignRoleRequirement.sync({ alter: isDev });
+  // User.sync({ alter: isDev });
+  // DiscordGuild.sync({ alter: isDev });
+  // Campaign.sync({ alter: isDev });
+  // DiscordRole.sync({ alter: isDev });
+  // TweetTransaction.sync({ alter: isDev });
+  // UserDiscordGuild.sync({ alter: isDev });
+  // UserDiscordRole.sync({ alter: isDev });
+  // CampaignRoleRequirement.sync({ alter: isDev });
 }
 
 export default dbInit;
