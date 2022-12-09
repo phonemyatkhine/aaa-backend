@@ -48,6 +48,20 @@ export const getById = async (id: number): Promise<UserDiscordRoleOutput> => {
   return userDiscordRole;
 };
 
+export const getByUserId = async (userId: number): Promise<UserDiscordRoleOutput[]> => {
+  const userDiscordRole = await UserDiscordRole.findAll({
+    where: {
+      userId,
+    }
+  });
+  if (!userDiscordRole) {
+    var err = new Error("User Roles not found");
+    err.code = 404;
+    throw err;
+  }
+  return userDiscordRole;
+};
+
 export const deleteById = async (id: string): Promise<boolean> => {
   const deletedUserDiscordRoleCount = await UserDiscordRole.destroy({
     where: { id },

@@ -48,6 +48,15 @@ export const getById = async (id: number): Promise<TweetTransactionOutput> => {
   return tweetTransaction;
 };
 
+export const getByUserId = async (userId: number): Promise<TweetTransactionOutput[] | []> => {
+  const tweetTransactions = await TweetTransaction.findAll({
+    where: {
+      userId
+    }
+  });
+  return tweetTransactions ?? [];
+}
+
 export const deleteById = async (id: string): Promise<boolean> => {
   const deletedTweetTransactionCount = await TweetTransaction.destroy({
     where: { id },

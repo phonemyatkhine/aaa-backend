@@ -3,6 +3,8 @@ import { RequestHandler } from "express";
 import * as tweetTransactionDal from "../../db/dal/tweet-transaction";
 import * as userDal from "../../db/dal/user";
 import * as campaignDal from "../../db/dal/campaign";
+import * as campaignRoleRequirementDal from "../../db/dal/campaign-role-requirement";
+import * as userDiscordRoleDal from "../../db/dal/user-discord-role";
 import { TweetTransactionInput } from "../../db/models/tweet-transaction";
 
 export const store: RequestHandler = async (req, res, next) => {
@@ -12,6 +14,19 @@ export const store: RequestHandler = async (req, res, next) => {
   const campaign = await campaignDal.getById(campaignId);
   const rewardPoint = campaign.pointPerTweet;
 
+  if(!user) {
+    return res.status(422).json({ message: "User not found" });
+  }
+  const requiredRoles = await campaignRoleRequirementDal.getByCampaignId(campaignId);
+  const userRoles = await userDiscordRoleDal.getByUserId(user.id);
+  // check if userRoles contain all the requiredRoles
+  const userRoleIds = userRoles.map((userRole) => userRole.discordRoleId);
+  const requiredRoleIds = requiredRoles.map((requiredRole) => requiredRole.discordRoleId);
+  const isEligible = requiredRoleIds.every((requiredRoleId) => userRoleIds.includes(requiredRoleId));
+  if(!isEligible) {
+    return res.status(422).json({ message: "User is not eligible for this campaign" });
+  }
+
   tweetTransactionDal
     .create({
       userId: user.id,
@@ -19,7 +34,15 @@ export const store: RequestHandler = async (req, res, next) => {
       rewardPoint,
       status : true,
     } as TweetTransactionInput)
-    .then((campaign) => {
+    .then(async (campaign) => {
+      let transactions = await tweetTransactionDal.getByUserId(user.id);
+      let totalPoints = 0;
+      if(!!transactions) {
+        transactions.forEach((transaction) => {
+          totalPoints += transaction.rewardPoint;
+        })
+      }
+      userDal.update(user.id, { pacaPoints: totalPoints });
       return res
         .status(201)
         .json({ message: "Successfully updated" });
