@@ -1,9 +1,10 @@
 import {
   RequestHandler
 } from 'express';
+import { request } from 'http';
 import { doRequest } from '../../services/common';
 import { populateDiscordData } from "../../services/discord";
-const request = require('request');
+const FormData = require('form-data');
 
 export const getLoginUrl: RequestHandler = async (req, res) => {
   const scope = "guilds guilds.members.read identify";
@@ -16,8 +17,7 @@ export const getLoginUrl: RequestHandler = async (req, res) => {
   searchParams.append("scope", scope);
   const url = `https://discord.com/api/oauth2/authorize?${searchParams.toString()}`;
 
-  res.header('Content-Type', 'application/json');
-  res.send({
+  res.status(200).json({
     url
   });
 }
@@ -26,49 +26,60 @@ export const getToken: RequestHandler = async (req, res) => {
   const {
     code
   } = req.query;
-  try {
-    let response: any = await doRequest(`https://discord.com/api/oauth2/token`, {
-      method: "POST",
-      form: {
-        client_id: process.env.DISCORD_CLIENT_ID ?? '',
-        client_secret: process.env.DISCORD_CLIENT_SECRET ?? '',
-        grant_type: "authorization_code",
-        code: code as string,
-        redirect_uri: process.env.FRONTEND_APP_URL + "/auth/discord/callback",
-      }
-    });
-    if(response) {
-      const {
-        access_token
-      } = JSON.parse(response);
-      if(!access_token) {
-        res.status(500).send({
-          message: "Something went wrong"
-        });
-      }
-      let resp: any = await doRequest("https://discord.com/api/users/@me", {
-        auth: {
-          bearer: access_token
-        }
-      });
-      const {
-        id, username, avatar,
-      } = JSON.parse(resp);
-      res.header('Content-Type', 'application/json');
-      res.send({
-        discordUserId: id,
-        username: username,
-        avatar : `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`,
-        accessToken: access_token,
-      });
-      populateDiscordData(id, username, access_token);
+
+  let response: any = await doRequest(`https://discord.com/api/oauth2/token`, {
+    method: "POST",
+    form: {
+      client_id: process.env.DISCORD_CLIENT_ID ?? '',
+      client_secret: process.env.DISCORD_CLIENT_SECRET ?? '',
+      grant_type: "authorization_code",
+      code: code as string,
+      redirect_uri: process.env.FRONTEND_APP_URL + "/auth/discord/callback",
     }
-  } catch (error) {
-    console.log(error);
-    res.sendStatus(500);
-    res.send({
-      "message": "Something went wrong"
-    })
+  }).catch((err) => {
+    res.status(500).json({
+      message: "Something went wrong"
+    });
+    return;
+  });
+
+  if(response) {
+    const {
+      access_token
+    } = JSON.parse(response);
+    if(!access_token) {
+      res.status(500).send({
+        message: "Something went wrong"
+      });
+    }
+    let resp: any = await doRequest("https://discord.com/api/users/@me", {
+      auth: {
+        bearer: access_token
+      }
+    }).catch((err) => {
+      res.status(500).json({
+        "message": "Something went wrong"
+      });
+      return;
+    });
+    const {
+      id, username, avatar,
+    } = JSON.parse(resp);
+
+    let discordUser = await populateDiscordData(id, username, access_token).catch((err) => {
+      res.status(err.code).json({
+        "message": err.message
+      });
+      return;
+    });
+
+    res.status(200).json({
+      discordUserId: id,
+      username: username,
+      avatar : `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`,
+      accessToken: access_token,
+    });
+    return;
   }
 }
 
@@ -76,26 +87,31 @@ export const validateToken: RequestHandler = async (req, res) => {
   const {accesstoken : accessToken, discorduserid: discordUserId} = req.headers;
   populateDiscordData(discordUserId as string, "", accessToken as string);
   
-  res.header('Content-Type', 'application/json');
-  res.status(200).send({
+  res.status(200).json({
     "message": "Valid Token"
   });
 }
 
 export const logout: RequestHandler = async (req, res) => {
-  // const { accesstoken, discorduserid } = req.headers;
-  // request.post("https://discord.com/api/oauth2/token/revoke", {
-  //   auth: {
-  //     bearer : accesstoken
-  //   }
-  // }, (err: any, response: any, body: any) => {
-  //   console.log("Logout ",response);
-  //   console.log("Logout Err ",err);
-    res.header('Content-Type', 'application/json');
-    res.send({
-      "message": "Logged out successfully"
-    })
-  // });
+  var form = new FormData();
+  form.append('client_id', process.env.DISCORD_CLIENT_ID ?? '');
+  form.append('client_secret', process.env.DISCORD_CLIENT_SECRET ?? '');
+  form.append('token', req.headers.accesstoken);
+
+  const logoutRes = await doRequest("https://discord.com/api/oauth2/token/revoke", {
+    method: "POST",
+    headers: form.getHeaders(),
+    body: form
+  }).catch((err) => {
+    res.status(500).json({
+      "message": "Something went wrong"
+    });
+    return;
+  });
+
+  res.status(200).json({
+    "message": "Logged out successfully"
+  })
 };
 
 /* using passport 

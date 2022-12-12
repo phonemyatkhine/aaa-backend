@@ -4,9 +4,16 @@ export const validateTokenWithDiscord = async (discordUserId: string, accessToke
     auth: {
       bearer : accessToken
     } 
+  }).catch((err) => {
+    return false;
   });
+
   const data = JSON.parse(response);
-  return data.id == discordUserId;
+  if(data) {
+    return data.id == discordUserId;
+  } else {
+    return false;
+  }
 }
 
 export const authMiddleware = async (req: any, res: any, next: any) => {
@@ -29,11 +36,10 @@ export const authMiddleware = async (req: any, res: any, next: any) => {
     } else {
       res.header('Content-Type', 'application/json');
       res.status(403).send({
-        "message": "Inalid Token"
+        "message": "Invalid Token"
       });
     }
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
     res.send({
       "message": "Something went wrong"

@@ -18,7 +18,12 @@ export const populateDiscordData = async (discordUserId: string, username: strin
     auth: {
       bearer: accessToken
     }
+  }).catch((err) => {
+    var error = new Error("Something went wrong");
+    error.code = 500;
+    throw error;
   });
+
   const guilds = JSON.parse(response);
 
   let discordGuilds = await discordGuildDal.getAll();
@@ -35,7 +40,12 @@ export const populateDiscordData = async (discordUserId: string, username: strin
           auth: {
             bearer: accessToken
           }
+        }).catch((err) => {
+          var error = new Error("Something went wrong");
+          error.code = 500;
+          throw error;
         });
+
         let memberData = JSON.parse(response);
         if (memberData.roles.length > 0) {
           memberData.roles.forEach(async (discordRoleId: string) => {
@@ -44,11 +54,12 @@ export const populateDiscordData = async (discordUserId: string, username: strin
               discordRoleId,
             }).then((userDiscordRole) => {
             }).catch((err) => {
+              return;
             })
           })
         }
       }
     })
   }
-  return;
+  return true;
 }

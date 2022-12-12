@@ -30,7 +30,10 @@ const dbInit = async () => {
   //   headers: {
   //     Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
   //   }
-  // })
+  // }).catch((err) => {
+  //   console.log(err);
+  //   return;
+  // });
   // const data = JSON.parse(response);
   // console.log(data);
   // data.roles.forEach((role: any) => {
