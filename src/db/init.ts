@@ -14,6 +14,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 const dbInit = async () => {
   // if isDev run migrations, seedings, etc.
+
   // User.sync({ alter: isDev });
   // DiscordGuild.sync({ alter: isDev });
   // Campaign.sync({ alter: isDev });
@@ -22,26 +23,28 @@ const dbInit = async () => {
   // UserDiscordGuild.sync({ alter: isDev });
   // UserDiscordRole.sync({ alter: isDev });
   // CampaignRoleRequirement.sync({ alter: isDev });
-  const discordGuildId = process.env.DISCORD_GUILD_ID;
-  let response: any = await doRequest(`https://discord.com/api/guilds/${discordGuildId}`, {
-    headers: {
-      Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
-    }
-  })
-  const data = JSON.parse(response);
-  console.log(data);
-  data.roles.forEach((role: any) => {
-    let roleData: DiscordRoleInput = {
-      id: role.id,
-      name: role.name,
-      discordGuildId: discordGuildId,
-    }
-    createRole(roleData).then((role) => {
 
-    }).catch((err) => {
+  // Import roles from discord bot token.
+  // const discordGuildId = process.env.DISCORD_GUILD_ID;
+  // let response: any = await doRequest(`https://discord.com/api/guilds/${discordGuildId}`, {
+  //   headers: {
+  //     Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+  //   }
+  // })
+  // const data = JSON.parse(response);
+  // console.log(data);
+  // data.roles.forEach((role: any) => {
+  //   let roleData: DiscordRoleInput = {
+  //     id: role.id,
+  //     name: role.name,
+  //     discordGuildId: discordGuildId,
+  //   }
+  //   createRole(roleData).then((role) => {
+
+  //   }).catch((err) => {
       
-    });
-  })
+  //   });
+  // })
 }
 
 export default dbInit;

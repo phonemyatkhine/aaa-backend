@@ -73,6 +73,10 @@ User.init(
     }
   },
   {
+    indexes: [{
+      unique: true,
+      fields: ["discordUserId"],
+    }],
     timestamps: true,
     sequelize: sequelizeConnection,
   }

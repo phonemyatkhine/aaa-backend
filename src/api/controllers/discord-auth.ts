@@ -1,6 +1,7 @@
 import {
   RequestHandler
 } from 'express';
+import { doRequest } from '../../services/common';
 import { populateDiscordData } from "../../services/discord";
 const request = require('request');
 
@@ -26,8 +27,8 @@ export const getToken: RequestHandler = async (req, res) => {
     code
   } = req.query;
   try {
-    console.log("Hello world");
-    request.post('https://discord.com/api/oauth2/token', {
+    let response: any = await doRequest(`https://discord.com/api/oauth2/token`, {
+      method: "POST",
       form: {
         client_id: process.env.DISCORD_CLIENT_ID ?? '',
         client_secret: process.env.DISCORD_CLIENT_SECRET ?? '',
@@ -35,37 +36,33 @@ export const getToken: RequestHandler = async (req, res) => {
         code: code as string,
         redirect_uri: process.env.FRONTEND_APP_URL + "/auth/discord/callback",
       }
-    }, (err: any, response: any, body: any) => {
-      if(response) {
-        const {
-          access_token
-        } = JSON.parse(response.body);
-        if(!access_token) {
-          res.status(500).send({
-            message: "Something went wrong"
-          });
-        }
-        request.get("https://discord.com/api/users/@me", {
-          'auth': {
-            'bearer' : access_token
-          }
-        }, (err: any, response: any, body: any) => {
-          if(response) {
-            const {
-              id, username, avatar,
-            } = JSON.parse(response.body);
-            res.header('Content-Type', 'application/json');
-            res.send({
-              discordUserId: id,
-              username: username,
-              avatar : `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`,
-              accessToken: access_token,
-            });
-            populateDiscordData(id, username, access_token);
-          }
+    });
+    if(response) {
+      const {
+        access_token
+      } = JSON.parse(response);
+      if(!access_token) {
+        res.status(500).send({
+          message: "Something went wrong"
         });
       }
-    });
+      let resp: any = await doRequest("https://discord.com/api/users/@me", {
+        auth: {
+          bearer: access_token
+        }
+      });
+      const {
+        id, username, avatar,
+      } = JSON.parse(resp);
+      res.header('Content-Type', 'application/json');
+      res.send({
+        discordUserId: id,
+        username: username,
+        avatar : `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`,
+        accessToken: access_token,
+      });
+      populateDiscordData(id, username, access_token);
+    }
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
