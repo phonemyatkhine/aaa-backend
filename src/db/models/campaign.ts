@@ -10,6 +10,8 @@ interface CampaignAttributes {
   id: number;
   name: string;
   tweetId: string;
+  description: string;
+  imageUrl: string;
   discordGuildId: string;
   pointPerTweet: number;
   createdAt?: Date;
@@ -19,7 +21,7 @@ interface CampaignAttributes {
 export interface CampaignInput
   extends Optional<
     CampaignAttributes,
-    "id" | "name" | "tweetId" | "discordGuildId" | "pointPerTweet"
+    "id" | "name" | "tweetId" | "discordGuildId" | "pointPerTweet" | "description" | "imageUrl"
   > {}
 export interface CampaignOutput extends Required<CampaignAttributes> {}
 
@@ -30,6 +32,8 @@ class Campaign
   public id!: number;
   public name!: string;
   public tweetId!: string;
+  public description!: string;
+  public imageUrl!: string;
   public discordGuildId!: string;
   public pointPerTweet!: number;
 
@@ -49,6 +53,14 @@ Campaign.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     tweetId: {
       type: DataTypes.STRING,

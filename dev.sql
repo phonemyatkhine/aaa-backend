@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: aaa_backend_test
--- Generation Time: 2022-12-12 2:16:54.7860 PM
+-- Generation Time: 2022-12-14 12:10:29.0530 AM
 -- -------------------------------------------------------------
 
 
@@ -39,6 +39,8 @@ CREATE TABLE "public"."Campaigns" (
     "pointPerTweet" int4 NOT NULL,
     "createdAt" timestamptz NOT NULL,
     "updatedAt" timestamptz NOT NULL,
+    "description" varchar(255),
+    "imageUrl" varchar(255),
     PRIMARY KEY ("id")
 );
 
@@ -140,9 +142,9 @@ INSERT INTO "public"."CampaignRoleRequirements" ("id", "campaignId", "discordRol
 (1, 1, '1048883585379217469', '2022-12-09 17:23:37.819514+00', '2022-12-09 17:23:37.819514+00'),
 (2, 1, '1048883781991415818', '2022-12-09 17:23:37.819514+00', '2022-12-09 17:23:37.819514+00');
 
-INSERT INTO "public"."Campaigns" ("id", "name", "tweetId", "discordGuildId", "pointPerTweet", "createdAt", "updatedAt") VALUES
-(1, 'Example Campaign', '1601124608282742785', '1048883426612236289', 3, '2022-12-09 15:56:11.330283+00', '2022-12-09 15:56:11.330283+00'),
-(2, 'Test campaign', '1601124608282742785', '1048883426612236289', 2, '2022-12-09 17:43:39.02437+00', '2022-12-09 17:43:39.02437+00');
+INSERT INTO "public"."Campaigns" ("id", "name", "tweetId", "discordGuildId", "pointPerTweet", "createdAt", "updatedAt", "description", "imageUrl") VALUES
+(1, 'Example Campaign', '1601124608282742785', '1048883426612236289', 3, '2022-12-09 15:56:11.330283+00', '2022-12-09 15:56:11.330283+00', NULL, NULL),
+(2, 'Test campaign', '1601124608282742785', '1048883426612236289', 2, '2022-12-09 17:43:39.02437+00', '2022-12-09 17:43:39.02437+00', NULL, NULL);
 
 INSERT INTO "public"."DiscordGuilds" ("id", "name", "createdAt", "updatedAt") VALUES
 ('1048883426612236289', 'Dev hour labs', '2022-12-09 15:56:03.080719+00', '2022-12-09 16:41:07.748+00');
@@ -153,27 +155,16 @@ INSERT INTO "public"."DiscordRoles" ("id", "discordGuildId", "name", "createdAt"
 ('1048883616152825866', '1048883426612236289', 'Admin', '2022-12-09 15:58:58.820223+00', '2022-12-09 15:58:58.820223+00'),
 ('1048883781991415818', '1048883426612236289', 'Sugondese', '2022-12-09 15:58:58.820223+00', '2022-12-09 15:58:58.820223+00');
 
-INSERT INTO "public"."TweetTransactions" ("id", "userId", "campaignId", "rewardPoint", "status", "createdAt", "updatedAt") VALUES
-(1, 3, 2, 2, 't', '2022-12-12 07:45:46.001+00', '2022-12-12 07:45:46.001+00'),
-(2, 3, 1, 3, 't', '2022-12-12 07:46:08.964+00', '2022-12-12 07:46:08.964+00');
-
-INSERT INTO "public"."UserDiscordGuilds" ("id", "userId", "discordGuildId", "createdAt", "updatedAt") VALUES
-(3, 3, '1048883426612236289', '2022-12-12 07:43:11.142+00', '2022-12-12 07:43:31.564+00');
-
-INSERT INTO "public"."UserDiscordRoles" ("id", "userId", "discordRoleId", "createdAt", "updatedAt") VALUES
-(5, 3, '1048883585379217469', '2022-12-12 07:43:12.036+00', '2022-12-12 07:43:12.036+00'),
-(6, 3, '1048883781991415818', '2022-12-12 07:43:12.036+00', '2022-12-12 07:43:12.036+00');
-
 INSERT INTO "public"."Users" ("id", "discordUserId", "discordUsername", "twitterUserId", "twitterUsername", "pacaPoints", "createdAt", "updatedAt") VALUES
-(3, '1048242348062167050', 'yoichi', NULL, NULL, 5, '2022-12-12 07:43:10.24+00', '2022-12-12 07:46:08.972+00');
+(3, '1048242348062167050', '', NULL, NULL, 5, '2022-12-12 07:43:10.24+00', '2022-12-12 13:12:44.034+00');
 
 ALTER TABLE "public"."CampaignRoleRequirements" ADD FOREIGN KEY ("campaignId") REFERENCES "public"."Campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "public"."CampaignRoleRequirements" ADD FOREIGN KEY ("discordRoleId") REFERENCES "public"."DiscordRoles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "public"."Campaigns" ADD FOREIGN KEY ("discordGuildId") REFERENCES "public"."DiscordGuilds"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "public"."DiscordRoles" ADD FOREIGN KEY ("discordGuildId") REFERENCES "public"."DiscordGuilds"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "public"."TweetTransactions" ADD FOREIGN KEY ("campaignId") REFERENCES "public"."Campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "public"."TweetTransactions" ADD FOREIGN KEY ("userId") REFERENCES "public"."Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "public"."UserDiscordGuilds" ADD FOREIGN KEY ("discordGuildId") REFERENCES "public"."DiscordGuilds"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."TweetTransactions" ADD FOREIGN KEY ("campaignId") REFERENCES "public"."Campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "public"."UserDiscordGuilds" ADD FOREIGN KEY ("userId") REFERENCES "public"."Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."UserDiscordGuilds" ADD FOREIGN KEY ("discordGuildId") REFERENCES "public"."DiscordGuilds"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "public"."UserDiscordRoles" ADD FOREIGN KEY ("userId") REFERENCES "public"."Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "public"."UserDiscordRoles" ADD FOREIGN KEY ("discordRoleId") REFERENCES "public"."DiscordRoles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
