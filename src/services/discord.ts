@@ -6,13 +6,17 @@ import * as userDiscordGuildDal from "../db/dal/user-discord-guild";
 import UserDiscordRole from "../db/models/user-discord-role";
 
 export const populateDiscordData = async (discordUserId: string, username: string, accessToken: string) => {
+  console.log('hehe');
   const user = await userDal.findOrCreate({
     discordUserId,
     discordUsername : username,
   });
+  console.log(user);
 
   if(!user) {
-    return;
+    var error = new Error("Something went wrong");
+    error.code = 500;
+    throw error;
   }
   let response: any = await doRequest("https://discord.com/api/users/@me/guilds", {
     auth: {
