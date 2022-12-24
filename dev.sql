@@ -113,7 +113,8 @@ CREATE TABLE public."Campaigns" (
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL,
     description character varying(255),
-    "imageUrl" character varying(255)
+    "imageUrl" character varying(255),
+    "campaignText" character varying
 );
 
 
@@ -379,9 +380,9 @@ COPY public."CampaignRoleRequirements" (id, "campaignId", "discordRoleId", "crea
 -- Data for Name: Campaigns; Type: TABLE DATA; Schema: public; Owner: myusername
 --
 
-COPY public."Campaigns" (id, name, "tweetId", "discordGuildId", "pointPerTweet", "createdAt", "updatedAt", description, "imageUrl") FROM stdin;
-1	Example Campaign	1601124608282742785	1048883426612236289	3	2022-12-09 15:56:11.330283+00	2022-12-09 15:56:11.330283+00	\N	\N
-2	Test campaign	1601124608282742785	1048883426612236289	2	2022-12-09 17:43:39.02437+00	2022-12-09 17:43:39.02437+00	\N	\N
+COPY public."Campaigns" (id, name, "tweetId", "discordGuildId", "pointPerTweet", "createdAt", "updatedAt", description, "imageUrl", "campaignText") FROM stdin;
+2	Test campaign	1601124608282742785	1048883426612236289	2	2022-12-09 17:43:39.02437+00	2022-12-09 17:43:39.02437+00	Hello Description	https://via.placeholder.com/640x480.png/0088bb?text=animals+pariatur	Hello Campaign
+1	Example Campaign	1601124608282742785	1048883426612236289	3	2022-12-09 15:56:11.330283+00	2022-12-09 15:56:11.330283+00	Hello Description	https://via.placeholder.com/640x480.png/0088bb?text=animals+pariatur	Hello Campaign
 \.
 
 
